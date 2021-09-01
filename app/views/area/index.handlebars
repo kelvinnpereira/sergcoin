@@ -1,0 +1,20 @@
+<div id="curso" class="container">
+	<div class="row">
+		<div class="col-sm">
+			<nav aria-label="breadcrumb">
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a href="/">Home</a></li>
+					<li class="breadcrumb-item active" aria-current="page">Áreas</li>
+				</ol>
+			</nav>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm">
+			<h1>Áreas da Ciência</h1>
+			{{#each areas}}
+				<li>{{nome}}</li>
+			{{/each}}
+		</div>
+	</div>
+</div>

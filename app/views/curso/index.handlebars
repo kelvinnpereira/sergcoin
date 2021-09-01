@@ -1,0 +1,77 @@
+<div class="container">
+
+	<div id="curso-index">
+
+		<div class="row">
+			<div class="col">
+				<h2>Cursos da UFAM</h2>
+			</div>
+			<div class="col">
+				<div class="float-right mt-3">
+					<a role="button" href="/curso/create" class="btn btn-primary"><i class="fas fa-plus"></i>&nbsp;
+						Adicionar</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col">
+
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th scope="col">Sigla</th>
+							<th scope="col">Nome</th>
+							<th scope="col" class="text-right">Opcões</th>
+						</tr>
+					</thead>
+					<tbody>
+						{{#each cursos}}
+						<tr id="data-curso-1">
+							<th scope="row">{{sigla}}</th>
+							<td>{{nome}}</td>
+							<td class="text-right">
+								<a href="/curso/read/{{id}}">
+									<i class="fa fa-eye" aria-hidden="true"></i>
+								</a>
+								<a href="/curso/update/{{id}}">
+									<i class="fa fa-pencil-alt" aria-hidden="true"></i>
+								</a>
+								<a class="delete-curso" href="#" data-id="{{id}}" data-nome="{{nome}}">
+									<i class="fa fa-trash-alt" aria-hidden="true"></i>
+								</a>
+							</td>
+						</tr>
+						{{/each}}
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+
+		<div class="modal fade" id="modal-delete">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Apagar Curso</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">×</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<p>Deseja mesmo apagar o curso <span id="curso-nome"></span>?</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" data-dismiss="modal"
+							id="delete-curso-confirma">Sim</button>
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<input type="hidden" name="_csrf" id="csrf" value="{{csrfToken}}">
+
+	</div>
+
+</div>

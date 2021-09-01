@@ -1,0 +1,94 @@
+<div class="container">
+    <div id="signup" class="bs-docs-section">
+        <div class="row">
+            <div class="col-lg-6">
+                <h1 class="text-center">Criar conta</h1>
+                <div class="signup-form">
+                    <p class="text-center">
+                        Deseja criar uma conta? Basta preencher o formulário abaixo.
+                    </p>
+                    <hr>
+                    <form method="post" action="/signup">
+                        <div class="form-group">
+                            <label for="nome">Nome Completo</label>
+                            <input name="nome" id="nome" type="text" placeholder="Jorge A. Menezes"
+                                class="form-control ">
+                            <div class="invalid-feedback">O nome precisa conter entre 6 e 100 caracteres.</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Endereço de E-mail</label>
+                            <input name="email" id="email" type="text" placeholder="jorge@example.com"
+                                class="form-control ">
+                            <div class="invalid-feedback">E-mail invalido!</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="curso">Selecione seu curso</label>
+                            <select name="curso" class="form-control">
+                                {{#each cursos}}
+                                <option id="{{inc @index}}" value="{{inc @index}}">{{nome}}</option>
+                                {{/each}}
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="senha">Escolha uma senha de acesso</label>
+                            <input name="senha" id="senha" type="password" placeholder="••••••••" class="form-control ">
+                            <div class="invalid-feedback">A senha precisa conter 6 ou mais caracteres.</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirma-senha">Confirme sua senha</label>
+                            <input id="confirma-senha" type="password" placeholder="••••••••" class="form-control">
+                            <div class="invalid-feedback">As senhas digitadas não são iguais.</div>
+                        </div>
+                        <div class="form-group form-check">
+                            <input name="termos" id="termos" type="checkbox" class="form-check-input">
+                            <label for="termos" class="form-check-label">
+                                Eu li e concordo com os <a target="_blank" href="#" data-toggle="modal"
+                                    data-target="#modal-termos"> termos de serviço</a>.
+                            </label>
+                            <div class="invalid-feedback">Você precisa concordar com os termos de serviço da aplicação.
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                            <button id="criar-conta" type="submit" class="btn btn-primary btn-lg btn-block">
+                                <span class="button-text">Criar conta</span>
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <p class="text-center">
+                        Já possui uma conta?&nbsp;&nbsp;&nbsp;<a href="/login">Faça o login</a> .
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modal-termos">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Termos de Serviço</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quo porro quam dignissimos, magnam
+                        deserunt error omnis possimus consequuntur dolor culpa quis soluta similique? Tenetur,
+                        perferendis harum sapiente quos architecto maxime.
+                    </p>
+                    <p>
+                        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Natus a nihil qui fuga fugiat,
+                        voluptas temporibus iusto labore aliquid harum, incidunt repellat at atque nam alias quidem
+                        itaque maiores excepturi!
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

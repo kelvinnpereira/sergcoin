@@ -1,0 +1,72 @@
+<div class="container">
+    <div class="row">
+        <div class="col-9 mt-4">
+            <p class="lead">Seja bem vindo ao aplicativo de partidas de xadrez do Instituto de Computação. Para iniciar
+                uma nova partida, clique na opção <b>Nova Partida</b> do menu superior. Essa aplicação foi desenvolvida
+                como Trabalho Prático da disciplina Programação Web 2.</p>
+        </div>
+        <div class="col-3">
+            <img src="/img/chess-clipart.png" alt="">
+        </div>
+    </div>
+    
+    {{#if partidasAceitas}}
+    <h2>Minhas partidas</h2>
+    {{/if }}
+
+    {{#each partidasAceitas}}
+    <div class="small-board">
+        <a href="/partida/{{id}}">
+            <div id="board{{id}}"></div>
+            <div class="small-info">
+                <span class="white">
+                    <i class="fas fa-chess-king"></i>
+                </span>
+                {{user1.nome}}<br>
+                <span class="black">
+                    <i class="fas fa-chess-king"></i>
+                </span>
+                {{user2.nome}}
+            </div>
+        </a>
+    </div>
+    <script>
+        Chessboard('board{{id}}', {
+            orientation: '{{color id_user_1 ../session.user.id}}',
+            position: '{{fen}}',
+            showNotation: false
+        });
+    </script>
+    {{/each}}
+
+    {{#if partidasAguardando}}
+    <div class="clearfix"></div>
+    <h2>Usuários aguardando oponentes</h2>
+    {{/if }}
+
+    {{#each partidasAguardando}}
+    <div class="small-board">
+        <a href="/partida/{{id}}">
+            <div id="board{{id}}"></div>
+            <div class="small-info">
+                <span class="white">
+                    <i class="fas fa-chess-king"></i>
+                </span>
+                {{user1.nome}}<br>
+                <span class="black">
+                    <i class="fas fa-chess-king"></i>
+                </span>
+                Aguardando Oponente
+            </div>
+        </a>
+    </div>
+    <script>
+        Chessboard('board{{id}}', {
+            orientation: '{{color id_user_1 ../session.user.id}}',
+            position: '{{fen}}',
+            showNotation: false
+        });
+    </script>
+    {{/each}}
+    <div class="clearfix"></div>
+</div>

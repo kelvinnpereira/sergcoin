@@ -1,0 +1,32 @@
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6">
+            <h1 class="text-center">
+                Acesse sua conta</h1>
+            <div class="login-form-container">
+                <hr>
+                <form method="POST" action="">
+                    <div class="form-group">
+                        <input name="email" type="email" placeholder="Endereço de E-mail" class="form-control" value=""
+                            autofocus="">
+                    </div>
+                    <div class="form-group">
+                        <input name="senha" type="password" placeholder="Senha" class="form-control">
+                    </div>
+                    <div class="form-group form-check">
+                        <input name="remember" type="checkbox" id="remember" class="form-check-input">
+                        <label for="remember" class="form-check-label">Mantenha-me logado</label>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                        <input type="submit" class="btn btn-primary btn-lg btn-block" value="Acessar">
+                    </div>
+                </form>
+                <p class="text-center">
+                    <a href="/forgot">Esqueceu sua senha?</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

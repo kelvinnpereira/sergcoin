@@ -1,0 +1,229 @@
+<div id="chess" class="container clearfix">
+
+	<div class="chess-board">
+		<div id="board"></div>
+		<div class="opponents">
+			<span class="{{color partidaObj.id_user_1 session.user.id}}">
+				<i class="fas fa-chess-king"></i>
+			</span>
+			&nbsp;&nbsp;{{my_user.nome}}&nbsp;&nbsp;&nbsp;&nbsp;x&nbsp;&nbsp;&nbsp;&nbsp;{{nomeNulo op_user.nome}}&nbsp;&nbsp;
+			<span class="{{color partidaObj.id_user_2 session.user.id}}">
+				<i class="fas fa-chess-king"></i>
+			</span>
+		</div>
+		<div id="status">A vez é do jogador <b>branco</b>.</div>
+	</div>
+
+	<div class="chat">
+		<div id="chat-history">
+			<ul id="messages">
+				{{#each mensagens}}
+				<li class="{{direction ../my_user.id id_user}}-message {{color ../partidaObj.id_user_1 id_user}}-message clearfix">
+					<div class="message-data">
+						<span class="message-data-time">{{dateTolocalStr createdAt}}</span>            
+						<span class="message-data-name">{{userName ../my_user ../op_user id_user}}</span>      
+						<span class="message-piece">
+							<i class="fas fa-chess-king"></i>
+						</span>              
+					</div>
+					<div class="message">
+					{{mensagem}}
+					</div>        
+				</li>
+				{{/each}}
+			</ul>
+		</div>
+
+		<div class="chat-message clearfix">
+			<textarea name="message-to-send" id="message-to-send" placeholder="Escreva sua mensagem"
+				rows="3"></textarea>
+			<button id="enviar">Enviar</button>
+		</div>
+
+	</div>
+
+</div>
+
+<script>
+
+	(function () {
+
+		$("#chat-history").scrollTop($('#messages').height());
+		const socket = io();
+		const partida = {{partidaObj.id}};
+		const user_w = '{{partidaObj.id_user_1}}';
+		const user_b = '{{partidaObj.id_user_2}}';
+		const user_current = '{{session.user.id}}';
+		const my_color = '{{color partidaObj.id_user_1 session.user.id}}';
+		const my_name = '{{my_user.nome}}';
+		const op_color = '{{color partidaObj.id_user_2 session.user.id}}';
+		const op_name = '{{nomeNulo op_user.nome}}';
+		const $status = $('#status');
+
+		if ({{b_ok}}) {
+			socket.emit('b_ok', {
+				partida: partida,
+			});
+		}
+
+		socket.on('b_ok', function (msg) {
+			if (msg.partida == partida) {
+				location.reload();
+			}
+		});
+
+		$("#enviar").click(function () {
+			let mensagem = {
+				partida: partida,
+				user: { id: user_current, nome: my_name },
+				color: my_color,
+				mensagem: $("#message-to-send").val(),
+				date: new Date(Date.now()).toLocaleString()
+			};
+			socket.emit('mensagem', mensagem);
+			$("#message-to-send").val("");
+			appendMensagem(mensagem, 'right', my_color);
+			$("#chat-history").scrollTop($('#messages').height());
+		});
+
+		$("#message-to-send").keypress(function (e) {
+			if (e.which == 13) {
+				$("#enviar").click();
+				return false;
+			}
+		});
+
+		socket.on('mensagem', function (mensagem) {
+			if (mensagem.partida === partida) {
+				appendMensagem(mensagem, 'left', op_color);
+				$("#chat-history").scrollTop($('#messages').height());
+			}
+		});
+
+		function appendMensagem(mensagem, align, color) {
+
+			if (align == 'left') {
+				var messageData =
+					`<div class="message-data">
+						<span class="message-piece"><i class="fas fa-chess-king"></i></span>              
+						<span class="message-data-name" >${mensagem.user.nome}</span>
+						<span class="message-data-time" >${mensagem.date}</span>  
+					</div>`;
+			} else {
+				var messageData =
+					`<div class="message-data">
+						<span class="message-data-time" >${mensagem.date}</span>            
+						<span class="message-data-name" >${mensagem.user.nome}</span>          
+						<span class="message-piece"><i class="fas fa-chess-king"></i></span>              
+					</div>`;
+			}
+
+			var newMessage =
+				`<li class="${align}-message ${color}-message clearfix">
+					${messageData}
+					<div class="message">
+					${mensagem.mensagem}
+					</div>        
+				</li>`;
+
+			$("#messages").append(newMessage);
+		}
+
+		const game = new Chess();
+		game.load('{{partidaObj.fen}}');
+
+		const board = Chessboard('board', {
+			draggable: true,
+			orientation: '{{color partidaObj.id_user_1 session.user.id}}',
+			position: '{{partidaObj.fen}}',
+			moveSpeed: 'slow',
+			onDragStart: onDragStart,
+			onDrop: onDrop,
+			onSnapEnd: onSnapEnd
+		});
+
+		function onDragStart(source, piece, position, orientation) {
+			// do not pick up pieces if the game is over
+			if (game.game_over()) return false;
+
+			// only pick up pieces for its own color
+			if ((my_color === 'white' && piece.search(/^b/) !== -1) ||
+				(my_color === 'black' && piece.search(/^w/) !== -1)) {
+				return false;
+			}
+
+			// only pick up pieces for the side to move
+			if ((game.turn() === 'w' && piece.search(/^b/) !== -1) ||
+				(game.turn() === 'b' && piece.search(/^w/) !== -1)) {
+				return false;
+			}
+		}
+
+		function onDrop(source, target) {
+			// see if the move is legal
+			var move = game.move({
+				from: source,
+				to: target,
+				promotion: 'q' // NOTE: always promote to a queen for example simplicity
+			});
+
+			// illegal move
+			if (move === null) return 'snapback'
+
+			// Enviar posição para adversário
+			socket.emit('mover', {
+				partida: partida,
+				source: source,
+				target: target,
+				position: game.fen(),
+			});
+
+			updateStatus();
+		}
+
+		// update the board position after the piece snap
+		// for castling, en passant, pawn promotion
+		function onSnapEnd() {
+			board.position(game.fen());
+		}
+
+		function updateStatus() {
+			var status = '';
+
+			var branco = '<b>branco</b>';
+			var preto = '<b>preto</b>';
+			var moveColor = game.turn() === 'b' ? preto : branco;
+
+			if (game.in_checkmate()) {// checkmate?
+				status = 'É xeque-mate! Vitória do jogador ' + (game.turn() === 'b' ? branco : preto) + '!';
+				socket.emit('vitoria', {
+					partida: partida,
+					winner: game.turn() === 'b' ? user_w : user_b,
+				})
+			} else if (game.in_draw()) {// empate? (draw)
+				status = 'O jogo empatou!';
+			} else {// game still on
+				status = 'A vez é do jogador ' + moveColor + '.';
+				if (game.in_check()) {// check?
+					status += ', o jogador ' + moveColor + ' está em xeque.';
+				}
+			}
+			$status.html(status);
+		}
+
+		socket.on('mover', function (move) {
+			if (move.partida == partida) {
+				board.move(move.source + '-' + move.target);
+
+				game.move({
+					from: move.source,
+					to: move.target,
+					promotion: 'q' // NOTE: always promote to a queen for example simplicity
+				});
+
+				updateStatus();
+			}
+		});
+		updateStatus();
+	})();
+</script>

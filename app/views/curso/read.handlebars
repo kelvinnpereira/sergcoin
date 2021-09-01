@@ -1,0 +1,42 @@
+<div id="read" class="container">
+    <div class="row">
+        <div class="col-sm">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item"><a href="/curso">Cursos</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{curso.nome}}</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            <h2>{{curso.nome}}</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            <table class="table table-hover">
+                <tbody>
+                    <tr>
+                        <th scope="row">Sigla</th>
+                        <td>{{curso.sigla}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Nome</th>
+                        <td>{{curso.nome}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Descrição</th>
+                        <td>{{curso.descricao}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Area</th>
+                        <td>{{curso.area}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
