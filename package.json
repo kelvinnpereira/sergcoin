@@ -1,0 +1,40 @@
+{
+  "name": "myapp",
+  "version": "1.0.0",
+  "description": "Trabalho prático de Programação Web 2",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "migrate": "npx sequelize db:migrate",
+    "seed": "npx sequelize-cli db:seed:all"
+  },
+  "author": "kelvinnpereira",
+  "license": "ISC",
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.11.2",
+    "ajv": "^5.5.2",
+    "bcryptjs": "^2.4.3",
+    "bootstrap": "^4.3.1",
+    "cookie-parser": "^1.4.4",
+    "csurf": "^1.10.0",
+    "express": "^4.17.1",
+    "express-handlebars": "^3.1.0",
+    "express-session": "^1.17.0",
+    "handlebars": "^4.5.3",
+    "jquery": "^3.4.1",
+    "morgan": "^1.9.1",
+    "mysql2": "^1.7.0",
+    "node-sass-middleware": "^0.11.0",
+    "nodemon": "^1.19.4",
+    "popper.js": "^1.15.0",
+    "sass": "^1.22.10",
+    "sequelize": "^5.19.0",
+    "sequelize-cli": "^5.5.1",
+    "socket.io": "^2.2.0",
+    "uuid": "^3.3.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kelvinnpereira/progweb2"
+  }
+}
